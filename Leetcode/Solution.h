@@ -46,11 +46,16 @@ public:
     int lengthOfLongestSubstring2(string s);
     //4
     double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2);
+    double findMedianSortedArrays2(vector<int>& nums1, vector<int>& nums2);
     //5
     string longestPalindrome(string s);
     string longestPalindrome2(string s);
+    //6
+    string convert(string s, int numRows);
     //7
     int reverse(int x);
+    //8
+    int myAtoi(string str);
     //9
     bool isPalindrome(int x);
     //10
@@ -60,16 +65,24 @@ public:
     //11
     int maxArea(vector<int>& height);
     int maxArea2(vector<int>& height);
+    //12
+    string intToRoman(int num);
+    //13
+    int romanToInt(string s);
     //14
     string longestCommonPrefix(vector<string>& strs);
     //15
     vector<vector<int>> threeSum(vector<int>& nums);
     vector<vector<int>> threeSum2(vector<int>& nums);
     vector<vector<int>> threeSum3(vector<int>& nums);
-    string gcdOfStrings(string str1, string str2);
+
+    //16
+    int threeSumClosest(vector<int>& nums, int target);
     //17
     vector<string> letterCombinations(string digits);
     vector<string> letterDict(string digits);
+    //18
+    vector<vector<int>> fourSum(vector<int>& nums, int target);
     //19
     ListNode* removeNthFromEnd(ListNode* head, int n);
     ListNode* removeNthFromEnd1(ListNode* head, int n);
@@ -80,10 +93,22 @@ public:
     ListNode* mergeTwoLists(ListNode* l1, ListNode* l2);
     //22
     vector<string> generateParenthesis(int n);
+    //23
     ListNode* mergeKLists(vector<ListNode*>& lists);
     ListNode* mergeKLists2(vector<ListNode*>& lists);
+    //24
+    ListNode* swapPairs(ListNode* head);
+    //25
+    ListNode* reverseKGroup(ListNode* head, int k);
+    string gcdOfStrings(string str1, string str2);
     //26
     int removeDuplicates(vector<int>& nums);
+    //27
+    int removeElement(vector<int>& nums, int val);
+    //28
+    int strStr(string haystack, string needle);
+    //29
+    int divide(int dividend, int divisor);
     //31 
     vector<int> ks;
     void nextPermutation(vector<int>& nums);

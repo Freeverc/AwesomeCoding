@@ -160,27 +160,22 @@ ListNode* Solution::addTwoNumbers(ListNode* l1, ListNode* l2)
 	int c = 0;
 	ListNode* p = new ListNode(c);
 	ListNode* sum = p;
-	while (l1 != NULL || l2 != NULL)
-	{
-		if (l1 != NULL)
-		{
+	while (l1 != NULL || l2 != NULL) {
+		if (l1 != NULL) {
 			p->val += l1->val;
 			l1 = l1->next;
 		}
-		if (l2 != NULL)
-		{
+		if (l2 != NULL) {
 			p->val += l2->val;
 			l2 = l2->next;
 		}
 		c = p->val / 10;
 		p->val %= 10;
-		if ((c > 0) || (l1 != NULL || l2 != NULL))
-		{
+		if ((c > 0) || (l1 != NULL || l2 != NULL)) {
 			p->next = new ListNode(c);
 			p = p->next;
 		}
-		else
-		{
+		else {
 			break;
 		}
 	}
@@ -239,16 +234,81 @@ int Solution::lengthOfLongestSubstring(string s)
 double Solution::findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
 	int m, n, i, j, iMin, iMax, maxLeft, minRight;
 	double median = 0;
-	if (nums1.size() > nums2.size())
-	{
+	if (nums1.size() > nums2.size()) {
 		vector<int> temp = nums1;
 		nums1 = nums2;
 		nums2 = temp;
 	}
 	m = nums1.size();
 	n = nums2.size();
-	if (m == 0)
+	if (m == 0) {
+		if (n % 2 == 0)
+			median = (double)(nums2[(n - 1) / 2] + nums2[(n + 1) / 2])/2;
+		else
+			median = nums2[n / 2];
+		return median;
+	}
+	iMin = 0;
+	iMax = m;
+	while (iMin <= iMax)
 	{
+		i = (iMin + iMax) / 2;
+		j = (m + n + 1) / 2 - i;
+		if ((i > 0) && (j > 0))
+			maxLeft = nums1[i - 1] > nums2[j - 1] ? nums1[i - 1] : nums2[j - 1];
+		else if ((i <= 0) && (j > 0))
+			maxLeft = nums2[j - 1];
+		else if ((i > 0) && (j <= 0))
+			maxLeft = nums1[i - 1];
+		else
+			break;
+
+		if((i<m)&&(j<n))
+			minRight = nums1[i] < nums2[j] ? nums1[i] : nums2[j];
+		else if((i>=m)&&(j<n))
+			minRight = nums2[j];
+		else if((i<m)&&(j>=n))
+			minRight = nums1[i];
+		else
+			break;
+		cout <<"irange : "<< iMin << "  " << iMax << endl;
+		cout << " i j  : " << i << "  " << j << endl;
+		cout << "maxmin: "<< maxLeft << "  " << minRight << endl;
+
+		if (maxLeft <= minRight)
+		{
+			if ((n + m) % 2 == 0)
+				median = (double)(maxLeft + minRight) / 2;
+			else
+				median = maxLeft;
+			break;
+		}
+		else
+		{
+			if ((i > 0) && (nums1[i - 1] > nums2[j]))
+			{
+				iMax = i;
+			}
+			if ((i < m) && (nums2[j - 1] > nums1[i]))
+			{
+				iMin = i+1;
+			}
+		}
+	}
+	return median;
+}
+
+double Solution::findMedianSortedArrays2(vector<int>& nums1, vector<int>& nums2) {
+	int m, n, i, j, iMin, iMax, maxLeft, minRight;
+	double median = 0;
+	if (nums1.size() > nums2.size()) {
+		vector<int> temp = nums1;
+		nums1 = nums2;
+		nums2 = temp;
+	}
+	m = nums1.size();
+	n = nums2.size();
+	if (m == 0) {
 		if (n % 2 == 0)
 			median = (double)(nums2[(n - 1) / 2] + nums2[(n + 1) / 2])/2;
 		else
@@ -332,47 +392,38 @@ string Solution::longestPalindrome(string s)
 	return result;
 }
 
+//5
 string Solution::longestPalindrome2(string s)
 {
 	int p[2004] = { 0 }, i = 0, j = 0, R = 0, C = 0, L = 0, maxLength=-1;
 	string sNew("#"); 
 	string result, resultNew;
-	for (i = 0,j=0; i < s.length(); i++, j++)
-	{
+	for (i = 0,j=0; i < s.length(); i++, j += 2) {
 		sNew.append(1, s[i]);
-		j++;
 		sNew.append(1, '#');
 	}
-	cout << sNew << endl;
 
-	for (i = 0; i < sNew.length(); i++)
-	{
+	for (i = 0; i < sNew.length(); i++) {
 		int k=0;
 		j = 2 * C - i;
-		if (i >= R)
-		{
+		if (i >= R) {
 			for (k = 0; ((i + k < sNew.length() && (i - k >= 0)) && (sNew[i + k] == sNew[i - k])); k++)
 				;
 			p[i] = k;
-			if (i + k - 1 > R)
-			{
+			if (i + k - 1 > R) {
 				R = i + k -1;
 				C = i;
 				L = 2 * C - R;
 			}
 		}
-		else
-		{
-			if (j - p[j] + 1< L)
-			{
+		else {
+			if (j - p[j] + 1< L) {
 				p[i] = R - i + 1;
 			}
-			else if (j - p[j] + 1> L)
-			{
+			else if (j - p[j] + 1> L) {
 				p[i] = p[j];
 			}
-			else
-			{
+			else {
 				for (k = p[j] - 1; ((i + k < sNew.length() && (i - k >= 0)) && (sNew[i + k] == sNew[i - k])); k++)
 					;
 				p[i] = k;
@@ -384,21 +435,80 @@ string Solution::longestPalindrome2(string s)
 				}
 			}
 		}
-		if (p[i] > maxLength)
-		{
+		if (p[i] > maxLength) {
 			maxLength = p[i];
 			resultNew = sNew.substr(i - p[i] + 1, 2 * p[i] - 1);
 		}
-		//cout << i << " " << j <<"   "<< k << "  " << L << " " << C << " " << R << endl;
-		//for (int m = 0; m < sNew.length(); m++)
-		//	cout << p[m] << "  ";
-		//cout <<"  "<< endl;
 	}
 	for (i = 1; i < resultNew.length(); i += 2)
 		result.append(1, resultNew[i]);
 	return result;
 }
 
+//6
+string Solution::convert(string s, int numRows)
+{
+	if (numRows == 1)
+		return s;
+	int d = 2 * numRows - 2;
+	string r = "";
+	for (int i = 0; i < numRows; i++) {
+		for (int j = 0; j + i < s.size(); j += d) {
+			r += s[j+i];
+			if (i != 0 && i != numRows - 1 && j + d - i < s.size())
+				r += s[j + d - i];
+		}
+	}
+	return r;
+}
+
+//7
+int Solution::reverse(int x)
+{
+	int n = 0;
+	while (x) {
+		if (n > INT_MAX / 10 || n == INT_MAX / 10 && x % 10 > 7)
+			return 0;
+		if (n < INT_MIN / 10 || n == INT_MIN / 10 && x % 10 < -8)
+			return 0;
+		n = n * 10 + x % 10;
+		x /= 10;
+	}
+	return n;
+}
+
+//8
+int Solution::myAtoi(string str)
+{
+	if (!str.size())
+		return 0;
+	int num = 0;
+	int i = 0;
+	while (i < str.size() && str[i] == ' ')
+		i++;
+	int flag = 1;
+	if (i < str.size() && str[i] == '+') {
+		i++;
+	}
+	else if (i < str.size() && str[i] == '-') {
+		flag = -1;
+		i++;
+	}
+	for(;i<str.size();i++) {
+		if (str[i] >= '0' && str[i] <= '9') {
+			if (flag == 1 && (num > INT_MAX / 10 || num == INT_MAX && str[i] - '0' > 7))
+				return INT_MAX;
+			if (flag == -1 && (num < INT_MIN / 10 || num == INT_MIN && str[i] - '0' > 8))
+				return INT_MIN;
+			num = num * 10 + (str[i] - '0')*flag;
+		}
+		else
+			return num;
+	}
+	return num;
+}
+
+//10
 bool Solution::isMatch(string s, string p)
 {
 	string sNew, pNew;
@@ -455,22 +565,17 @@ bool Solution::dp(const string s, int sIndex, const string p, int pIndex)
 {
 	vector<vector<int>> &m = mem;
 	if (m[sIndex][pIndex] != -1)
-	{
 		return m[sIndex][pIndex];
-	}
 	bool res;
 	if (pIndex >= p.size())
 		res = (sIndex >= s.size());
-	else
-	{
+	else {
 		bool currentMatch = (sIndex < s.size() && (s[sIndex] == p[pIndex] || p[pIndex] == '.'));
-		if (pIndex + 1 < p.size() && p[pIndex + 1] == '*')
-		{
+		if (pIndex + 1 < p.size() && p[pIndex + 1] == '*') {
 			res = dp(s, sIndex, p, pIndex + 2) || // 忽略x*
 				currentMatch && dp(s, sIndex + 1, p, pIndex); // 如果*前的字符匹配，则将s前进一位
 		}
-		else
-		{
+		else {
 			res = currentMatch && dp(s, sIndex + 1, p, pIndex + 1);
 		}
 	}
@@ -512,6 +617,79 @@ int Solution::maxArea2(vector<int>& height)
 		}
 	}
 	return maxCapasity;
+}
+
+//12
+string Solution::intToRoman(int num)
+{
+	string r = "";
+	if (num == 0)
+		return r;
+	vector<int> symbol = { 'I', 'V','X','L','C','D','M' };
+	vector<int> value = {1, 5, 10, 50, 100, 500, 1000};
+	int i;
+	for (i = 0; i < 7 && num >= value[i]; i++)
+		;
+	//cout << num << " " << i << endl;
+	if (i < 7) {
+		if (i % 2 == 0) {
+			if (num / (value[i] / 10) == 9) {
+				r += symbol[i - 2];
+				r += symbol[i];
+				num %= (value[i] / 10);
+			}
+			else {
+				r += symbol[i - 1];
+				num -= value[i - 1];
+			}
+		}
+		else {
+			if (num / (value[i] / 5) == 4) {
+				r += symbol[i - 1];
+				r += symbol[i];
+				num %= (value[i] / 5);
+			}
+			else {
+				r += symbol[i - 1];
+				num -= value[i - 1];
+			}
+		}
+	}
+	else {
+		int n = num / value[6];
+		num %= value[6];
+		while (n--)
+			r += 'M';
+	}
+	r += intToRoman(num);
+	return r;
+}
+int Solution::romanToInt(string s) {
+	if (s.empty())
+		return 0;
+	vector<int> symbol = { 'I', 'V','X','L','C','D','M' };
+	vector<int> value = {1, 5, 10, 50, 100, 500, 1000};
+	int num = 0;
+	for (int i = 0; i < s.size(); i++) {
+		int j;
+		for (j = 0; j < 7 && symbol[j] != s[i]; j++)
+			;
+		if (j % 2 == 0) {
+			if (i + 1 < s.size() && j + 1 < 7 && s[i + 1] == symbol[j + 1]) {
+				num += value[j + 1] - value[j];
+				i++;
+			}
+			else if (i + 1 < s.size() && j + 2 < 7 && s[i + 1] == symbol[j + 2]) {
+				num += value[j + 2] - value[j];
+				i++;
+			}
+			else
+				num += value[j];
+		}
+		else
+			num += value[j];
+	}
+	return num;
 }
 
 vector<vector<int>> Solution::threeSum(vector<int>& nums)
@@ -628,45 +806,46 @@ vector<vector<int>> Solution::threeSum3(vector<int>& nums)
 	return results;
 }
 
-string Solution::gcdOfStrings(string str1, string str2)
+//16
+int Solution::threeSumClosest(vector<int>& nums, int target)
 {
-	string s="";
-	if (str1.length() > str2.length())
-	{
-		s = str1;
-		str1 = str2;
-		str2 = s;
-	}
-	while (str1.length() != 0)
-	{
-		if (str2.compare(0, str1.length(),str1) != 0)
-			break;
-		else 
-		{
-			str2 = str2.substr(str1.length());
-			if (str1.length() > str2.length())
-			{
-				s = str1;
-				str1 = str2;
-				str2 = s;
+	if (nums.size() < 3)
+		return 0;
+	sort(nums.begin(), nums.end());
+	int sum = nums[0] + nums[1] + nums[2];
+	int d = sum - target;
+	if (d < 0)
+		d = -d;
+	for (int i = 0; i + 2 < nums.size(); i++) {
+		int lp = i + 1, rp = nums.size() - 1;
+		while (lp < rp) {
+			int currSum = nums[i] + nums[lp] + nums[rp];
+			if (currSum == target)
+				return currSum;
+			else if (currSum < target) {
+				if (target - currSum < d) {
+					d = target - currSum;
+					sum = currSum;
+				}
+				lp++;
+			}
+			else {
+				if (currSum - target < d) {
+					d = currSum - target;
+					sum = currSum;
+				}
+				rp--;
 			}
 		}
 	}
-	if (str1.length() == 0)
-		s = str2;
-	else
-		s = "";
-	return s;
+	return sum;
 }
-
+//17
 vector<string> Solution::letterCombinations(string digits)
 {
 	vector<string> results;
 	if (digits.size() == 0)
-	{
-		results.push_back("");
 		return results;
-	}
 	else
 	{
 		vector<string> r1 = letterDict(digits);
@@ -718,6 +897,38 @@ vector<string> Solution::letterDict(string digits)
 	}
 	return results;
 }
+//18
+vector<vector<int>> Solution::fourSum(vector<int>& nums, int target)
+{
+	vector<vector<int>> result;
+	if (!nums.size())
+		return result;
+	for (int k = 0; k < nums.size(); k++) {
+		if (k > 0 && nums[k] == nums[k - 1])
+			continue;
+		for (int i = k+1; i < nums.size(); i++) {
+			if (i > k+1 && nums[i] == nums[i - 1])
+				continue;
+			int lp = i + 1;
+			int rp = nums.size() - 1;
+			while (lp < rp) {
+				if (nums[k] + nums[i] + nums[lp] + nums[rp] < target)
+					lp++;
+				else if (nums[k] + nums[i] + nums[lp] + nums[rp] > target)
+					rp--;
+				else {
+					vector<int> r = { nums[k], nums[i], nums[lp], nums[rp] };
+					if (rp + 1 >= nums.size() || (rp + 1 < nums.size() && nums[rp] != nums[rp + 1]))
+						result.push_back(r);
+					lp++;
+					rp--;
+				}
+			}
+		}
+	}
+	return result;
+}
+
 ListNode* Solution::removeNthFromEnd(ListNode* head, int n) {
 	ListNode* p = head;
 	int len = 0;
@@ -744,6 +955,7 @@ ListNode* Solution::removeNthFromEnd(ListNode* head, int n) {
 	}
 	return head;
 }
+
 ListNode* Solution::removeNthFromEnd1(ListNode* head, int n) {
 	vector<ListNode*> pList;
 	ListNode* p = head;
@@ -768,23 +980,17 @@ ListNode* Solution::removeNthFromEnd1(ListNode* head, int n) {
 	return head;
 }
 ListNode* Solution::removeNthFromEnd2(ListNode* head, int n) {
+	if (!head)
+		return NULL;
 	ListNode* p1 = head;
 	ListNode* p2 = head;
-	while (n--)
+	while (p1 && n--)
 		p1 = p1->next;
 	if (p1 == NULL)
-	{
-		if (head != NULL)
 			return head->next;
-		else
-			return NULL;
-
-	}
-	else
-	{
+	else {
 		p1 = p1->next;
-		while (p1 != NULL)
-		{
+		while (p1 != NULL) {
 			p1 = p1->next;
 			p2 = p2->next;
 		}
@@ -793,6 +999,36 @@ ListNode* Solution::removeNthFromEnd2(ListNode* head, int n) {
 	return head;
 }
 
+string Solution::gcdOfStrings(string str1, string str2)
+{
+	string s="";
+	if (str1.length() > str2.length())
+	{
+		s = str1;
+		str1 = str2;
+		str2 = s;
+	}
+	while (str1.length() != 0)
+	{
+		if (str2.compare(0, str1.length(),str1) != 0)
+			break;
+		else 
+		{
+			str2 = str2.substr(str1.length());
+			if (str1.length() > str2.length())
+			{
+				s = str1;
+				str1 = str2;
+				str2 = s;
+			}
+		}
+	}
+	if (str1.length() == 0)
+		s = str2;
+	else
+		s = "";
+	return s;
+}
 bool Solution::isValid(string s)
 {
 	stack<char> st;
@@ -825,23 +1061,21 @@ bool Solution::isValid(string s)
 	return false;
 }
 
+//21
 ListNode* Solution::mergeTwoLists(ListNode* l1, ListNode* l2) {
 	ListNode* l0;
 	ListNode* p0;
 	ListNode* p1 = l1;
 	ListNode* p2 = l2;
-	if (l1 == NULL)
-	{
+	if (l1 == NULL) {
 		l0 = l2;
 		return l0;
 	}
-	else if (l2 == NULL)
-	{
+	else if (l2 == NULL) {
 		l0 = l1;
 		return l0;
 	}
-	else
-	{
+	else {
 		if (l1->val < l2->val)
 		{
 			l0 = l1;
@@ -855,28 +1089,23 @@ ListNode* Solution::mergeTwoLists(ListNode* l1, ListNode* l2) {
 		l0->next = NULL;
 	}
 	p0 = l0;
-	while (p1 != NULL && p2 != NULL)
-	{
-		if (p1->val < p2->val)
-		{
+	while (p1 != NULL && p2 != NULL) {
+		if (p1->val < p2->val) {
 			p0->next = p1;
 			p1 = p1->next;
 		}
-		else
-		{
+		else {
 			p0->next = p2;
 			p2 = p2->next;
 		}
 		p0 = p0->next;
 	}
-	while (p1 != NULL)
-	{
+	while (p1 != NULL) {
 		p0->next = p1;
 		p1 = p1->next;
 		p0 = p0->next;
 	}
-	while (p2!=NULL)
-	{
+	while (p2!=NULL) {
 		p0->next = p2;
 		p2 = p2->next;
 		p0 = p0->next;
@@ -884,6 +1113,7 @@ ListNode* Solution::mergeTwoLists(ListNode* l1, ListNode* l2) {
 	return l0;
 }
 
+//22
 vector<string> Solution::generateParenthesis(int n)
 {
 	vector<int> maxNum(n);
@@ -935,20 +1165,7 @@ vector<string> Solution::generateParenthesis(int n)
 		if (finish)
 			break;
 	}
-	return results;		
-		//cout<< "max: " ;
-		//for (int i = 0; i < n; i++)
-		//{
-		//	cout << maxNum[i] << " ";
-		//}
-		//cout << endl;
-		//cout<< "num: ";
-		//for (int i = 0; i < n; i++)
-		//{
-		//	cout << num[i] << " ";
-		//}
-		//cout << endl;
-
+	return results;
 }
 
 
@@ -1033,6 +1250,133 @@ ListNode* Solution::mergeKLists2(vector<ListNode*>& lists)
 	return l0;
 }
 
+//24
+ListNode* Solution::swapPairs(ListNode* head)
+{
+	if (!head)
+		return NULL;
+	if (!head->next)
+		return head;
+	ListNode* p = head;
+	head = head->next;
+	p->next = swapPairs(head->next);
+	head->next = p;
+	return head;
+}
+
+//25
+ListNode* Solution::reverseKGroup(ListNode* head, int k)
+{
+	ListNode* pSlow = NULL, * pMid = NULL, * pFast = NULL, * pEnd = head;
+	for(int i = 1;i<k && pEnd;i++ ) {
+		pEnd = pEnd->next;
+	}
+	if (!pEnd)
+		return head;
+	pSlow = reverseKGroup(pEnd->next, k);
+	pMid = head;
+	while(pMid != pEnd) {
+		pFast = pMid->next;
+		pMid->next = pSlow;
+		pSlow = pMid;
+		pMid = pFast;
+	}
+	pMid->next = pSlow;
+	return pEnd;
+}
+
+//26
+int Solution::removeDuplicates(vector<int>& nums)
+{
+	if (nums.size() <= 1)
+		return nums.size();
+	int le = 1, ri;
+	for (int i = 1; i < nums.size(); i++) {
+		if (nums[i] != nums[i - 1]) {
+			nums[le] = nums[i];
+			le++;
+		}
+	}
+	return le;
+}
+
+//27
+int Solution::removeElement(vector<int>& nums, int val)
+{
+	if (!nums.size())
+		return nums.size();
+	int i, j;
+	for(i = 0, j = 0; i < nums.size(); i++) {
+		if (nums[i] != val) {
+			nums[j] = nums[i];
+			j++;
+		}
+	}
+	return j;
+}
+
+//28
+int Solution::strStr(string haystack, string needle)
+{
+	//if (!needle.size())
+	//	return 0;
+	//for (int i = 0; i < haystack.size(); i++) {
+	//	if (haystack[i] == needle[0]) {
+	//		int match = 1;
+	//		for (int j = 0; j < needle.size(); j++) {
+	//			if (i + j >= haystack.size() || needle[j] != haystack[i + j]) {
+	//				match = 0;
+	//				break;
+	//			}
+	//		}
+	//		if (match)
+	//			return i;
+	//	}
+	//}
+	//return -1;
+	if (!needle.size())
+		return 0;
+	vector<int> mem;
+	for (int i = 0; i < haystack.size(); i++) {
+		if (haystack[i] == needle[0]) {
+			int match = 1;
+			for (int j = 0; j < needle.size(); j++) {
+				if (i + j >= haystack.size() || needle[j] != haystack[i + j]) {
+					match = 0;
+					break;
+				}
+			}
+			if (match)
+				return i;
+		}
+	}
+	return -1;
+}
+
+//29
+int Solution::divide(int dividend, int divisor)
+{
+	int n = 0;
+	int flag = 1;
+	if (divisor < 0) {
+		flag = -flag;
+		divisor = -divisor;
+	}
+	else if (divisor == 0)
+		return 0;
+	if (dividend < 0) {
+		flag = -flag;
+		dividend = -dividend;
+	}
+	while (dividend >= divisor) {
+		n++;
+		dividend -= divisor;
+	}
+	return flag > 0 ? n : -n;
+
+}
+
+//31
 void Solution::nextPermutation(vector<int>& nums)
 {
 	int i, le = -1, mi = nums.size() - 1;
@@ -1057,6 +1401,7 @@ void Solution::nextPermutation(vector<int>& nums)
 		nums[le] = nums[mi];
 		nums[mi] = i;
 	}
+
 	for (i = nums.size() - 1, ++le; i > le; i--, le++)
 	{
 		mi = nums[i];
@@ -1065,6 +1410,7 @@ void Solution::nextPermutation(vector<int>& nums)
 	}
 	return ;
 }
+
 //33
 int Solution::search(vector<int>& nums, int target)
 {
@@ -1101,6 +1447,7 @@ int Solution::search(vector<int>& nums, int target)
 	}
 	return -1;
 }
+
 int Solution::biSearch(vector<int>& nums, int i, int j, int target)
 {
 	if (nums[i] < target)
@@ -3749,7 +4096,9 @@ bool Solution::canWinNim(int n)
 
 bool Solution::isPalindrome(int x)
 {
-	int m = x, n = 0;
+	if (x < 0)
+		return false;
+	long int m = x, n = 0;
 	while (m != 0) {
 		n = n * 10 + m % 10;
 		m /= 10;
@@ -3769,21 +4118,6 @@ bool Solution::containsDuplicate(vector<int>& nums)
 		mp[nums[i]] = 1;
 	}
 	return true;
-}
-
-int Solution::removeDuplicates(vector<int>& nums)
-{
-	if (nums.size() <= 1)
-		return nums.size();
-	int le = 1, ri;
-	for (int i = 1; i < nums.size(); i++)
-	{
-		if(nums[i] != nums[i - 1]) {
-			nums[le] = nums[i];
-			le++;
-		}
-	}
-	return le;
 }
 
 bool Solution::isPowerOfTwo(int n)
@@ -3835,19 +4169,6 @@ string Solution::longestCommonPrefix(vector<string>& strs)
 	return s;
 }
 
-int Solution::reverse(int x)
-{
-	int n = 0;
-	while (x) {
-		if (n > INT_MAX / 10 || n == INT_MAX && x % 10 > 7)
-			return 0;
-		if (n < INT_MIN / 10 || n == INT_MIN && x % 10 < -8)
-			return 0;
-		n = n * 10 + x % 10;
-		x /= 10;
-	}
-	return n;
-}
 
 vector<vector<int>> Solution::generateMatrix(int n)
 {

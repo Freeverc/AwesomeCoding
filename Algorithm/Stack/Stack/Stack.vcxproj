@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{6245382A-76E4-4072-885C-B28018960162}</ProjectGuid>
+    <ProjectGuid>{B4CB9904-59C4-481D-BE56-B563A3EAD1FF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Meituan</RootNamespace>
+    <RootNamespace>Stack</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -147,7 +147,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Meituan.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="stack.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
